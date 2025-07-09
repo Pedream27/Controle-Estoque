@@ -1,0 +1,198 @@
+.equipamentos-table-container {
+    width: 100%;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+    color: #333;
+}
+
+h2 {
+    text-align: center;
+    color: #007A3D;
+    margin-bottom: 20px;
+}
+
+.equipamentos-table {
+    width: 100%;
+    border-collapse: collapse;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
+}
+
+.equipamentos-table th,
+.equipamentos-table td {
+    padding: 12px 15px;
+    text-align: -webkit-center;
+    border-bottom: 2px solid #ddd;
+
+}
+
+.equipamentos-table th {
+    background-color: #007A3D;
+    color: white;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.equipamentos-table tbody tr:nth-child(even) {
+    background-color: #f8f8f8;
+}
+
+.equipamentos-table tbody tr:hover {
+    background-color: #f1f1f1;
+    transition: background-color 0.2s ease;
+}
+
+.actions-cell {
+    white-space: nowrap; /* Evita que os botões quebrem a linha */
+}
+
+.edit-button,
+.delete-button {
+    padding: 8px 12px;
+    margin-right: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+}
+
+.edit-button {
+    background-color: #007A3D; /* Verde */
+    color: white;
+}
+
+.edit-button:hover {
+    background-color: #007A3D;
+}
+
+.delete-button {
+    background-color: #dc3545; /* Vermelho */
+    color: white;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+}
+
+.loading-message,
+.error-message,
+.no-data-message {
+    text-align: center;
+    padding: 20px;
+    font-size: 1.1em;
+    color: #555;
+}
+
+.error-message {
+    color: #dc3545;
+    font-weight: bold;
+}
+
+/* Estilos do Modal */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6); /* Fundo semi-transparente */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Garante que fique por cima de outros elementos */
+}
+
+.modal-content {
+    background-color: #fff;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    width: 90%;
+    max-width: 500px; /* Largura máxima para o formulário */
+    max-height: 80vh; /* Altura máxima para caber em telas menores */
+    overflow-y: auto; /* Adiciona scroll se o conteúdo for muito grande */
+    position: relative;
+}
+
+.modal-content h3 {
+    text-align: center;
+    color: #007A3D;
+    margin-bottom: 25px;
+    font-size: 1.5em;
+}
+
+.equipamento-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px; /* Espaçamento entre os campos */
+}
+
+.equipamento-form label {
+    display: flex;
+    flex-direction: column;
+    font-weight: bold;
+    color: #555;
+    font-size: 0.95em;
+}
+
+.equipamento-form input[type="text"],
+.equipamento-form input[type="number"],
+.equipamento-form select {
+    padding: 10px 12px;
+    margin-top: 5px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+    width: 100%; /* Ocupa 100% da largura do label */
+    box-sizing: border-box; /* Inclui padding e border na largura total */
+}
+
+.equipamento-form input[type="text"]:focus,
+.equipamento-form input[type="number"]:focus,
+.equipamento-form select:focus {
+    border-color: #007A3D;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+}
+
+.equipamento-form input[disabled] {
+    background-color: #e9ecef;
+    cursor: not-allowed;
+}
+
+.form-buttons {
+    display: flex;
+    justify-content: flex-end; /* Alinha os botões à direita */
+    gap: 10px; /* Espaçamento entre os botões */
+    margin-top: 25px;
+}
+
+.save-button,
+.cancel-button {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1em;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.save-button {
+    background-color: #007A3D;
+    color: white;
+}
+
+.save-button:hover {
+    background-color: #007A3D;
+}
+
+.cancel-button {
+    background-color: #6c757d;
+    color: white;
+}
+
+.cancel-button:hover {
+    background-color: #5a6268;
+}

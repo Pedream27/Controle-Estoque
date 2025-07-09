@@ -1,0 +1,252 @@
+package br.com.pholiveira.Controle.de.Estoque.services;
+
+import br.com.pholiveira.Controle.de.Estoque.model.Equipamentos;
+import br.com.pholiveira.Controle.de.Estoque.model.enuns.Localizacao;
+import br.com.pholiveira.Controle.de.Estoque.repository.EquipamentosRepository;
+import com.opencsv.CSVReader;
+import com.opencsv.exceptions.CsvValidationException;
+import org.apache.poi.ss.usermodel.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.InputStreamResource;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import com.opencsv.CSVWriter;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+@Service
+public class ProcessamentoExcel {
+
+    @Autowired // Injeta uma instância de ClienteRepository
+    private EquipamentosRepository repository;
+
+    private static Logger logger = LoggerFactory.getLogger(ProcessamentoExcel.class);
+
+    public void processarUploadPlanilha(MultipartFile file) throws IOException {
+        String filename = file.getOriginalFilename();
+        if (filename == null) {
+            throw new IllegalArgumentException("Nome do arquivo não pode ser nulo.");
+        }
+
+        if (filename.endsWith(".csv")) {
+            processarCsv(file);
+        } else if (filename.endsWith(".xlsx") || filename.endsWith(".xls")) {
+            processarExcel(file);
+        } else {
+            throw new IllegalArgumentException("Formato de arquivo não suportado. Use .csv, .xlsx ou .xls.");
+        }
+    }
+
+    private void processarCsv(MultipartFile file) throws IOException {
+        List<Equipamentos> equipamentosList = new ArrayList<>();
+
+        try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
+            String[] data;
+            boolean firstLine = true;
+
+            while ((data = reader.readNext()) != null) {
+                if (firstLine) {
+                    firstLine = false;
+                    continue; // Pula cabeçalho
+                }
+
+                if (data.length >= 8) {
+                    Equipamentos equipamentos = new Equipamentos();
+                    equipamentos.setNomeCadastradoTasy(data[0].trim().replace("\"", ""));
+                    equipamentos.setTipoEquipamento(data[1].trim().replace("\"", ""));
+                    equipamentos.setMarca(data[2].trim().replace("\"", ""));
+                    equipamentos.setModelo(data[3].trim().replace("\"", ""));
+                    equipamentos.setLocalizacao(setLoca(data[4]));
+                    try {
+                        equipamentos.setQntEstoque(Integer.parseInt(data[5].trim()));
+                    } catch (NumberFormatException e) {
+
+                        equipamentos.setQntEstoque(0);
+                    }
+
+                    try {
+                        equipamentos.setQntFuncionando(Integer.parseInt(data[6].trim()));
+                    } catch (NumberFormatException e) {
+
+                        equipamentos.setQntFuncionando(0);
+                    }
+
+                    try {
+                        equipamentos.setQntInoperante(Integer.parseInt(data[7].trim()));
+                    } catch (NumberFormatException e) {
+
+                        equipamentos.setQntInoperante(0);
+                    }
+
+
+
+                    equipamentosList.add(equipamentos);
+                }
+            }
+        } catch (CsvValidationException e) {
+            throw new RuntimeException(e);
+        }
+
+        repository.saveAll(equipamentosList);
+    }
+    private Localizacao setLoca(String data) {
+        if(data.equals("DATA_CENTER")) {
+            return Localizacao.DATA_CENTER;
+
+        }else if(data.equals("ARMARIO_SUPORTE")) {
+            return  Localizacao.ARMARIO_SUPORTE;
+        }
+        new RuntimeException("Erro localização não existente");
+        return null;
+    }
+
+    private void processarExcel(MultipartFile file) throws IOException {
+        List<Equipamentos> equipamentosList = new ArrayList<>();
+        try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
+            Sheet sheet = workbook.getSheetAt(0); // Pega a primeira aba da planilha
+            Iterator<Row> rowIterator = sheet.iterator();
+
+            rowIterator.next(); // Pula a primeira linha (cabeçalho)
+
+            while (rowIterator.hasNext()) {
+                Row currentRow = rowIterator.next();
+                // Verifique se a linha é vazia para evitar NullPointerException
+                if (isRowEmpty(currentRow)) {
+                    continue;
+                }
+
+                // Mapeie as células para as propriedades do Cliente.
+                // Adapte os índices (0, 1, 2, 3) conforme a ordem das colunas na sua planilha.
+                Equipamentos equipamento = new Equipamentos();
+                Cell nomeTasyCell = currentRow.getCell(0);
+                Cell tipoEquipamentoCell = currentRow.getCell(1);
+                Cell marcaCell = currentRow.getCell(2);
+                Cell modeloCell = currentRow.getCell(3);
+                Cell localizacaoCell = currentRow.getCell(4);
+                Cell qntEstoqueCell = currentRow.getCell(5);
+                Cell qntOperanteCell = currentRow.getCell(6);
+                Cell qntInoperanteCell = currentRow.getCell(7);
+                // Lógica de leitura de célula com tratamento para diferentes tipos e nulls
+
+                if (nomeTasyCell != null) {
+                    equipamento.setNomeCadastradoTasy(nomeTasyCell.getStringCellValue());
+                }
+                if (tipoEquipamentoCell != null) {
+                    equipamento.setTipoEquipamento(tipoEquipamentoCell.getStringCellValue());
+                }
+                if (marcaCell != null) {
+                    equipamento.setMarca(marcaCell.getStringCellValue());
+                }
+                if (modeloCell != null) {
+                    equipamento.setModelo(modeloCell.getStringCellValue());
+                }
+                if (localizacaoCell != null) {
+                    equipamento.setLocalizacao(setLoca(localizacaoCell.getStringCellValue()));
+                }
+                if (qntEstoqueCell != null) {
+                    if (qntEstoqueCell.getCellType() == CellType.NUMERIC) {
+                        equipamento.setQntEstoque((int) qntEstoqueCell.getNumericCellValue());
+                    } else if (qntEstoqueCell.getCellType() == CellType.STRING) {
+                        try {
+                            equipamento.setQntEstoque(Integer.parseInt(qntEstoqueCell.getStringCellValue()));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Aviso: Idade inválida na célula: " + qntEstoqueCell.getStringCellValue());
+                            // Deixa como nulo ou define um valor padrão
+                        }
+                    }
+                }
+                if (qntOperanteCell != null) {
+                    if (qntOperanteCell.getCellType() == CellType.NUMERIC) {
+                        equipamento.setQntFuncionando((int) qntOperanteCell.getNumericCellValue());
+                    } else if (qntOperanteCell.getCellType() == CellType.STRING) {
+                        try {
+                            equipamento.setQntFuncionando(Integer.parseInt(qntOperanteCell.getStringCellValue()));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Aviso: Idade inválida na célula: " + qntOperanteCell.getStringCellValue());
+                            // Deixa como nulo ou define um valor padrão
+                        }
+                    }
+                }
+                if (qntInoperanteCell != null) {
+                    if (qntInoperanteCell.getCellType() == CellType.NUMERIC) {
+                        equipamento.setQntInoperante((int) qntInoperanteCell.getNumericCellValue());
+                    } else if (qntInoperanteCell.getCellType() == CellType.STRING) {
+                        try {
+                            equipamento.setQntInoperante(Integer.parseInt(qntInoperanteCell.getStringCellValue()));
+                        } catch (NumberFormatException e) {
+                            System.err.println("Aviso: Idade inválida na célula: " + qntInoperanteCell.getStringCellValue());
+                            // Deixa como nulo ou define um valor padrão
+                        }
+                    }
+                }
+
+                equipamentosList.add(equipamento);
+            }
+        }
+        repository.saveAll(equipamentosList); // Salva todos os clientes de uma vez
+    }
+
+    // Helper para verificar se uma linha é vazia
+    private boolean isRowEmpty(Row row) {
+        if (row == null) {
+            return true;
+        }
+        Iterator<Cell> cellIterator = row.cellIterator();
+        while (cellIterator.hasNext()) {
+            Cell cell = cellIterator.next();
+            if (cell != null && cell.getCellType() != CellType.BLANK && !cell.getStringCellValue().trim().isEmpty()) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public ResponseEntity<InputStreamResource> exportToCSV() throws IOException {
+        List<Equipamentos> equipamentos = repository.findAll();
+
+        ByteArrayOutputStream out = new ByteArrayOutputStream();
+        try (CSVWriter writer = new CSVWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
+            // Cabeçalho
+            writer.writeNext(new String[]{
+                     "Nome", "Tipo", "Marca", "Modelo", "Localização", "Funcionando", "Inoperante", "Estoque"
+            });
+
+
+            for (Equipamentos eq : equipamentos) {
+                writer.writeNext(new String[]{
+                        eq.getNomeCadastradoTasy(),
+                        eq.getTipoEquipamento(),
+                        eq.getMarca(),
+                        eq.getModelo(),
+                        eq.getLocalizacao()!= null ? eq.getLocalizacao().name() : "INDEFINIDA",
+                        String.valueOf(eq.getQntFuncionando()),
+                        String.valueOf(eq.getQntInoperante()),
+                        String.valueOf(eq.getQntEstoque()),
+
+
+
+                });
+            }
+        }
+
+        String fileName = "Estoque_de_Equipamento_" + LocalDate.now() + ".csv";
+
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+        headers.setContentType(MediaType.parseMediaType("text/csv"));
+        headers.add("Access-Control-Expose-Headers", "Content-Disposition");
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(new InputStreamResource(new ByteArrayInputStream(out.toByteArray())));
+    }
+
+}

@@ -25,15 +25,15 @@ import static br.com.pholiveira.Controle.de.Estoque.hateos.EquipamentosHateos.ad
 public class EquipamentosController {
 
         private final EquipamentosServices equipamentosService;
-        private final ProcessamentoExcel _processamentoExcel;
-    public EquipamentosController(EquipamentosServices equipamentosService, ProcessamentoExcel processamentoExcel) {
+
+    public EquipamentosController(EquipamentosServices equipamentosService) {
         this.equipamentosService = equipamentosService;
-        _processamentoExcel = processamentoExcel;
+
     }
 
-    // Endpoint para criar um novo equipamento
-    @PostMapping
-    public ResponseEntity<Equipamentos> criarEquipamento(@RequestBody Equipamentos equipamento) {
+        // Endpoint para criar um novo equipamento
+        @PostMapping
+        public ResponseEntity<Equipamentos> criarEquipamento(@RequestBody Equipamentos equipamento) {
             Equipamentos novoEquipamento = equipamentosService.criarEquipamento(equipamento);
             addHateos(novoEquipamento);
             return new ResponseEntity<>(novoEquipamento, HttpStatus.CREATED);
@@ -83,35 +83,15 @@ public class EquipamentosController {
             }
         }
 
-    // Upload da planilha para o banco de dados
-    @PostMapping("/planilha") // Mapeia requisições POST para /api/upload/planilha
-    public ResponseEntity<String> uploadPlanilha(@RequestParam("file") MultipartFile file) {
-        if (file.isEmpty()) {
-            return new ResponseEntity<>("Por favor, selecione um arquivo para upload.", HttpStatus.BAD_REQUEST);
-        }
-
-        try {
-            _processamentoExcel.processarUploadPlanilha(file);
-            return new ResponseEntity<>("Planilha carregada e dados salvos com sucesso!", HttpStatus.OK);
-        } catch (IllegalArgumentException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        } catch (Exception e) {
-            // Logar o erro completo para depuração
-            e.printStackTrace();
-            return new ResponseEntity<>("Erro ao processar a planilha: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/download")
-    public ResponseEntity<InputStreamResource> downloadCSV() throws IOException {
-        return _processamentoExcel.exportToCSV();
-    }
-
-    @GetMapping("/buscar")
-    public ResponseEntity<List<Equipamentos>> buscarPorNome(@RequestParam String nome) {
+        // Busca por nome todo: não esta funcionando
+        @GetMapping("/buscar")
+        public ResponseEntity<List<Equipamentos>> buscarPorNome(@RequestParam String nome) {
         List<Equipamentos> equipamentos = equipamentosService.buscarPorNome(nome);
         return ResponseEntity.ok(equipamentos);
     }
+
+
+
 
     }
 

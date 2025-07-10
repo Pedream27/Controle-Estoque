@@ -15,7 +15,7 @@ public class EmailService {
 
     public void enviarEmailSimples(EmailDto emailDto) {
         SimpleMailMessage mensagem = new SimpleMailMessage();
-        mensagem.setTo("pholiveira@unimedpelotas.com.br");
+        mensagem.setTo("E-MAIL DE PRODUTO");
         mensagem.setSubject(emailDto.assunto());
         mensagem.setText(emailDto.corpo());
         mensagem.setFrom(emailDto.solicitante());

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Table, TableBody, TableCell, TableContainer,
     TableHead, TableRow, Paper,
@@ -12,16 +12,16 @@ import {
 } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
 import { Pagination } from '@mui/material';
-import QuantityControls from './QuantityControls..jsx';
-import EquipamentoAddModal from './EquipamentoAddModal';
-import EquipamentoEditModal from './EquipamentoEditModal';
+import QuantityControls from '../components/QuantityControls..jsx';
+import EquipamentoAddModal from '../components/EquipamentoAddModal.jsx';
+import EquipamentoEditModal from '../components/EquipamentoEditModal.jsx';
 import {
     getEquipamentos,
     updateEquipamento,
     deleteEquipamento,
     addEquipamento,
     downloadEquipamentos, buscarEquipamentosPorNome, enviarNotificacaoEmail
-} from '../api/equipamentos';
+} from '../api/equipamentos.js';
 
 export default function EquipamentosTable() {
     const [equipamentos, setEquipamentos] = useState([]);
@@ -158,7 +158,7 @@ export default function EquipamentosTable() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
                 <Typography variant="h4">Inventário de Equipamentos</Typography>
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button variant="outlined" color="info" onClick={() => navigate('/autorizar')}>
+                    <Button variant="outlined" color="primary" onClick={() => navigate('/autorizar')}>
                         Autorização de Compra
                     </Button>
                     <Button startIcon={<AddCircleOutlineIcon />} variant="contained" onClick={() => setOpenAdd(true)}>

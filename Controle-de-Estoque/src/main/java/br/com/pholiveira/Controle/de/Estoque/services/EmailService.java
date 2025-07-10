@@ -37,9 +37,24 @@ public class EmailService {
     public void solicitacaoDeCompra(SolicitacaoCompraDTO solicitacao) {
         SimpleMailMessage mensagem = new SimpleMailMessage();
         mensagem.setTo("E-MAIL TESTE");
-        mensagem.setSubject(emailDto.assunto());
-        mensagem.setText(emailDto.corpo());
-        mensagem.setFrom(emailDto.solicitante());
+        mensagem.setSubject("Solicitação de Compra de Equipamento");
+        mensagem.setText(
+                "Venho por meio deste solicitar a aquisição do seguinte equipamento:\n" +
+                        "\n" +
+                        "Equipamento: " + solicitacao.nomeEquipamento() + " \n" +
+                        "Quantidade: "+  solicitacao.quantidadeDesejada() + " \n" +
+                        "Finalidade: "+ solicitacao.motivo() + "\n" +
+                        "Valor estimado: "+ solicitacao.valorEstimado() + "\n" +
+                        "\n" +
+                        "Essa solicitação se faz necessária para atender às demandas do setor de forma mais eficiente, garantindo a continuidade das atividades com qualidade e segurança.\n" +
+                        "\n" +
+                        "Agradeço pela atenção e fico à disposição para qualquer esclarecimento adicional.\n" +
+                        "\n" +
+                        "Atenciosamente,\n" +
+                        solicitacao.nomeSolicitante()
+
+        );
+        mensagem.setFrom(solicitacao.emailSolicitante());
 
         mailSender.send(mensagem);
     }

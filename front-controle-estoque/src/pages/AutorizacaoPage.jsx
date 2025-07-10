@@ -6,14 +6,20 @@ export default function AutorizacaoPage() {
     const [nome, setNome] = useState('');
     const [email, setEmail] = useState('');
     const [produto, setProduto] = useState('');
+    const [valorEstimado, setValorEstimado] = useState('');
+    const [qntDesejada, setQntDesejada] = useState('');
+    const [motivo, setMotivo] = useState('');
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         const payload = {
             nomeSolicitante: nome,
-            teste: email,
-            produtoValor: produto,
+            emailSolicitante: email,
+            nomeEquipamento: produto,
+            quantidadeDesejada: qntDesejada,
+            motivo: motivo,
+            valorEstimado: valorEstimado
         };
 
         try {
@@ -55,7 +61,7 @@ export default function AutorizacaoPage() {
                 />
                 <TextField
                     fullWidth
-                    label="Produto(s) e valor estimado"
+                    label="Produto"
                     margin="normal"
                     required
                     multiline
@@ -63,12 +69,42 @@ export default function AutorizacaoPage() {
                     value={produto}
                     onChange={(e) => setProduto(e.target.value)}
                 />
+                <TextField
+                    fullWidth
+                    label="Quantidade Desejada"
+                    margin="normal"
+                    required
+                    multiline
+                    rows={3}
+                    value={produto}
+                    onChange={(e) => setQntDesejada(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="Valor Estimado"
+                    margin="normal"
+                    required
+                    multiline
+                    rows={3}
+                    value={produto}
+                    onChange={(e) => setValorEstimado(e.target.value)}
+                />
+                <TextField
+                    fullWidth
+                    label="Motivo"
+                    margin="normal"
+                    required
+                    multiline
+                    rows={3}
+                    value={produto}
+                    onChange={(e) => setMotivo(e.target.value)}
+                />
                 <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>
                     <Button variant="contained" color="primary" type="submit">
                         Enviar Solicitação
                     </Button>
                     <Button variant="outlined" color="primary" onClick={() => navigate('/')}>
-                        Voltar à Tabela
+                        Voltar
                     </Button>
                 </Box>
             </form>

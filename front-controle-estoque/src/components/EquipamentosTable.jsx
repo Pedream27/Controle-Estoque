@@ -20,7 +20,7 @@ import {
     updateEquipamento,
     deleteEquipamento,
     addEquipamento,
-    downloadEquipamentos, buscarEquipamentosPorNome
+    downloadEquipamentos, buscarEquipamentosPorNome, enviarNotificacaoEmail
 } from '../api/equipamentos';
 
 export default function EquipamentosTable() {
@@ -76,6 +76,25 @@ export default function EquipamentosTable() {
 
     const handleEdit = (equip) => setSelected(equip);
     const handleSaveEdit = async (edited) => {
+        if (edited.qntFuncionando === 0) {
+            const confirm = window.confirm(
+                `A quantidade funcionando do equipamento "${edited.nomeCadastradoTasy}"(${edited.tipoEquipamento}) chegou a 0. Deseja notificar a equipe por e-mail?`
+            );
+
+            if (confirm) {
+                try {
+                    // Supondo que você tenha uma função para enviar email
+                    await enviarNotificacaoEmail({
+                        assunto: 'Sem Estoque ',
+                        mensagem: `O equipamento "${edited.nomeCadastradoTasy} "(${edited.tipoEquipamento}) está com estoque zerado.`
+                    });
+                    showSnack('Notificação enviada por e-mail!');
+                } catch (err) {
+                    showSnack(`Erro ao enviar notificação: ${err.message}`, 'error');
+                }
+            }
+        }
+
         try {
             const updated = await updateEquipamento(edited.id, edited);
             setEquipamentos((prev) =>

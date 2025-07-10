@@ -59,3 +59,17 @@ export async function buscarEquipamentosPorNome(nome) {
     return await res.json(); // retorna List<Equipamentos>
 }
 
+export async function enviarNotificacaoEmail(dados) {
+    const res = await fetch('/api/email/enviar', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dados)
+    });
+
+    if (!res.ok) throw new Error('Erro ao enviar e-mail');
+    return await res.json();
+}
+
+
+
+

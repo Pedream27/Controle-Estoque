@@ -1,21 +1,23 @@
 package br.com.pholiveira.Controle.de.Estoque.controller;
 
 import br.com.pholiveira.Controle.de.Estoque.services.ProcessamentoExcel;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 
-@Controller("/api/equipamentos")
+@RestController()
+@RequestMapping("api/equipamentos")
 public class PlanilhaController {
 
 
+    private static final Logger log = LoggerFactory.getLogger(PlanilhaController.class);
     private final ProcessamentoExcel _processamentoExcel;
 
     public PlanilhaController(ProcessamentoExcel processamentoExcel) {
@@ -31,11 +33,13 @@ public class PlanilhaController {
 
         try {
             _processamentoExcel.processarUploadPlanilha(file);
+            log.warn("Planilha Processado com sucesso!");
             return new ResponseEntity<>("Planilha carregada e dados salvos com sucesso!", HttpStatus.OK);
         } catch (IllegalArgumentException e) {
+            log.warn(e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         } catch (Exception e) {
-            // Logar o erro completo para depuração
+            log.warn(e.getMessage());
             e.printStackTrace();
             return new ResponseEntity<>("Erro ao processar a planilha: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }

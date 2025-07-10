@@ -7,6 +7,8 @@ import UploadPage from './pages/UploadPage';
 import unimedTheme from './theme/unimedTheme';
 import AutorizacaoPage from "./pages/AutorizacaoPage.jsx";
 import HomePage from "./pages/HomePage.jsx";
+import DemandasPage from "./pages/DemandasPage.jsx";
+import DemandasTable from "./pages/DemandasTabela.jsx";
 
 function App() {
     return (
@@ -18,6 +20,8 @@ function App() {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/upload" element={<UploadPage />} />
                     <Route path="/autorizar" element={<AutorizacaoPage />} />
+                    <Route path="/demandas" element={<DemandasPage />} />
+                    <Route path="/tabela/demandas" element={<DemandasTable />} />
                 </Routes>
             </BrowserRouter>
         </ThemeProvider>

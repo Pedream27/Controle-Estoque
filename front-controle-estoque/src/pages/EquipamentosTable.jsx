@@ -155,14 +155,24 @@ export default function EquipamentosTable() {
 
         <Box sx={{ p: 3 }}>
             {error && <Alert severity="error">{error}</Alert>}
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3 }}>
+            <Box sx={{  display: 'flex',
+                justifyContent: 'space-between',
+                mb: 3,
+                position: 'sticky',
+                top: 0,
+                backgroundColor: '#fff',
+                zIndex: 1,
+                paddingBottom: 1 }}>
                 <Typography variant="h4">Inventário de Equipamentos</Typography>
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button variant="outlined" color="primary" onClick={() => navigate('/autorizar')}>
+                    <Button variant="contained" color="primary" onClick={() => navigate('/demandas')}>
+                        Demandas
+                    </Button>
+                    <Button variant="contained" color="primary" onClick={() => navigate('/autorizar')}>
                         Autorização de Compra
                     </Button>
                     <Button startIcon={<AddCircleOutlineIcon />} variant="contained" onClick={() => setOpenAdd(true)}>
-                        + Equipamento
+                        Equipamento
                     </Button>
                     <Button variant="outlined" color="secondary" onClick={() => navigate('/upload')}>
                         Upload Arquivo
@@ -170,16 +180,20 @@ export default function EquipamentosTable() {
                     <Button variant="outlined" color="success" onClick={handleDownload}>
                         Baixar Banco de Dados
                     </Button>
+                    <Button variant="outlined" color="success" onClick={() => navigate('/')}>
+                        Voltar
+                    </Button>
                 </Box>
             </Box>
 
 
 
             {equipamentos.length === 0 ? (
-                <Box sx={{ textAlign: 'center' }}>
+                <Box sx={{  maxHeight: '60vh', overflowY: 'auto' }}>
                     <Typography color="textSecondary">Nenhum equipamento cadastrado.</Typography>
                 </Box>
             ) : (
+                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
@@ -223,6 +237,7 @@ export default function EquipamentosTable() {
                         </TableBody>
                     </Table>
                 </TableContainer>
+                </Box>
 
             )}
             {equipamentos.length > 0 && (

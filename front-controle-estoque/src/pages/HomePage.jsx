@@ -56,6 +56,14 @@ export default function HomePage() {
                     >
                         Solicitar Autorização de Compra
                     </Button>
+                    <Button
+                        variant="outlined"
+                        color="secondary"
+                        onClick={() => navigate('/demandas')}
+                        size="large"
+                    >
+                        Ver Tabela de Demandas
+                    </Button>
                 </Box>
             </Box>
         </Box>

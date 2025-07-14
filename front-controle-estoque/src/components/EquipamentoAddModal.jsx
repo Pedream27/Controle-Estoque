@@ -8,14 +8,13 @@ import {
     TextField,
     Button,
     Grid,
-    FormControl, // <-- Importe este
-    InputLabel,  // <-- Importe este
-    Select,      // <-- Importe este
-    MenuItem,    // <-- Importe este
+    FormControl,
+    InputLabel,  
+    Select,      
+    MenuItem,   
 } from '@mui/material';
-
-// Defina suas opções de localização aqui
-// Você pode carregar isso de uma API ou de um arquivo de configuração, se preferir.
+// Definindo as localizações disponíveis como constantes
+// Isso facilita a manutenção e reutilização do código
 const LOCALIZACOES_DISPONIVEIS = [
    'ARMARIO_SUPORTE',
     'DATA_CENTER'
@@ -26,7 +25,7 @@ const initialNewEquipamentoState = {
     tipoEquipamento: '',
     marca: '',
     modelo: '',
-    localizacao: '', // Valor inicial pode ser vazio ou a primeira opção
+    localizacao: '', 
     qntEstoque: 0,
     qntFuncionando: 0,
     qntInoperante: 0,

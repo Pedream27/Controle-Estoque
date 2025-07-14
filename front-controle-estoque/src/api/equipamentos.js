@@ -1,4 +1,4 @@
-// src/api/equipamentos.js
+
 const API_URL = 'http://localhost:8080/api/equipamentos';
 
 export async function getEquipamentos(page = 0, size = 10) {

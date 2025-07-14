@@ -31,34 +31,45 @@ public class ProcessamentoExcel {
     private static Logger logger = LoggerFactory.getLogger(ProcessamentoExcel.class);
 
     public void processarUploadPlanilha(MultipartFile file) throws IOException {
+        logger.info("Iniciando o processamento do arquivo: {}", file.getOriginalFilename());
         String filename = file.getOriginalFilename();
         if (filename == null) {
+            logger.error("Nome do arquivo é nulo.");
             throw new IllegalArgumentException("Nome do arquivo não pode ser nulo.");
         }
 
         if (filename.endsWith(".csv")) {
+            logger.info("Processando arquivo CSV: {}", filename);
             processarCsv(file);
         } else if (filename.endsWith(".xlsx") || filename.endsWith(".xls")) {
+            logger.info("Processando arquivo Excel: {}", filename);
             processarExcel(file);
         } else {
+            logger.error("Formato de arquivo não suportado: {}", filename);
             throw new IllegalArgumentException("Formato de arquivo não suportado. Use .csv, .xlsx ou .xls.");
         }
     }
 
     private void processarCsv(MultipartFile file) throws IOException {
+        logger.info("Processando arquivo CSV: {}", file.getOriginalFilename());
+        // Usando OpenCSV para ler o arquivo CSV
         List<Equipamentos> equipamentosList = new ArrayList<>();
 
         try (CSVReader reader = new CSVReader(new InputStreamReader(file.getInputStream()))) {
             String[] data;
             boolean firstLine = true;
 
-            while ((data = reader.readNext()) != null) {
+            while ((data = reader.readNext()) != null) {  
+                // Verifica se é a primeira linha (cabeçalho)
+                // Se for, pula para a próxima iteração  
                 if (firstLine) {
                     firstLine = false;
                     continue; // Pula cabeçalho
                 }
 
                 if (data.length >= 8) {
+                    // Mapeia os dados do CSV para o modelo Equipamentos
+                    // Certifique-se de que os índices correspondam às colunas do seu CSV
                     Equipamentos equipamentos = new Equipamentos();
                     equipamentos.setNomeCadastradoTasy(data[0].trim().replace("\"", ""));
                     equipamentos.setTipoEquipamento(data[1].trim().replace("\"", ""));
@@ -98,6 +109,7 @@ public class ProcessamentoExcel {
         repository.saveAll(equipamentosList);
     }
     private Localizacao setLoca(String data) {
+        
         if(data.equals("DATA_CENTER")) {
             return Localizacao.DATA_CENTER;
 
@@ -109,6 +121,8 @@ public class ProcessamentoExcel {
     }
 
     private void processarExcel(MultipartFile file) throws IOException {
+        logger.info("Processando arquivo Excel: {}", file.getOriginalFilename());
+        // Usando Apache POI para ler o arquivo Excel
         List<Equipamentos> equipamentosList = new ArrayList<>();
         try (Workbook workbook = WorkbookFactory.create(file.getInputStream())) {
             Sheet sheet = workbook.getSheetAt(0); // Pega a primeira aba da planilha
@@ -210,6 +224,8 @@ public class ProcessamentoExcel {
     }
 
     public ResponseEntity<InputStreamResource> exportToCSV() throws IOException {
+        logger.info("Exportando dados para CSV");
+        // Usando OpenCSV para criar o arquivo CSV
         List<Equipamentos> equipamentos = repository.findAll();
 
         ByteArrayOutputStream out = new ByteArrayOutputStream();

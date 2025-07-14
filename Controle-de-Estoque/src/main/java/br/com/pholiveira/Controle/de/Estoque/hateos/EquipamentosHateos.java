@@ -2,8 +2,6 @@ package br.com.pholiveira.Controle.de.Estoque.hateos;
 
 import br.com.pholiveira.Controle.de.Estoque.controller.EquipamentosController;
 import br.com.pholiveira.Controle.de.Estoque.model.Equipamentos;
-import br.com.pholiveira.Controle.de.Estoque.model.RequestAddEquipamento;
-
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 

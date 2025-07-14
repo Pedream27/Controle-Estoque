@@ -1,13 +1,10 @@
 package br.com.pholiveira.Controle.de.Estoque.services;
 
 import br.com.pholiveira.Controle.de.Estoque.model.Equipamentos;
-import br.com.pholiveira.Controle.de.Estoque.model.RequestAddEquipamento;
-import br.com.pholiveira.Controle.de.Estoque.model.enuns.Localizacao;
 import br.com.pholiveira.Controle.de.Estoque.repository.EquipamentosRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.util.List;
 import java.util.Optional;

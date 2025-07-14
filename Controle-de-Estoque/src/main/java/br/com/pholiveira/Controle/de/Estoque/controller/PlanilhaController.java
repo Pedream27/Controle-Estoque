@@ -6,7 +6,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.core.io.InputStreamResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -27,6 +26,7 @@ public class PlanilhaController {
     // Upload da planilha para o banco de dados
     @PostMapping("/planilha") // Mapeia requisições POST para /api/upload/planilha
     public ResponseEntity<String> uploadPlanilha(@RequestParam("file") MultipartFile file) {
+        log.info("Iniciando o upload da planilha: {}", file.getOriginalFilename());
         if (file.isEmpty()) {
             return new ResponseEntity<>("Por favor, selecione um arquivo para upload.", HttpStatus.BAD_REQUEST);
         }
@@ -47,6 +47,7 @@ public class PlanilhaController {
     // Faz Dowload do Banco de dados dos equipamentos em CSV
     @GetMapping("/download")
     public ResponseEntity<InputStreamResource> downloadCSV() throws IOException {
+        log.info("Iniciando o download dos equipamentos em CSV");
         return _processamentoExcel.exportToCSV();
     }
 }

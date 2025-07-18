@@ -56,6 +56,7 @@ public class EquipamentosServices {
         equipamento.setQntEstoque(equipamentoAtualizado.getQntEstoque());
         equipamento.setQntFuncionando(equipamentoAtualizado.getQntFuncionando());
         equipamento.setQntInoperante(equipamentoAtualizado.getQntInoperante());
+        equipamento.setURLImagem(equipamentoAtualizado.getURLImagem());
     }
 
     // Deletar equipamento por ID

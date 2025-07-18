@@ -18,11 +18,12 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
     private int qntEstoque;
     private int qntFuncionando;
     private int qntInoperante;
+    private String URLImagem;
 
     public Equipamentos() {
     }
 
-    public Equipamentos(String nomeCadastradoTasy, String tipoEquipamento, String marca, Localizacao localizacao, int qntEstoque, int qntFuncionando, int qntInoperante) {
+    public Equipamentos(String nomeCadastradoTasy, String tipoEquipamento, String marca, Localizacao localizacao, int qntEstoque, int qntFuncionando, int qntInoperante, String URLImagem) {
         this.nomeCadastradoTasy = nomeCadastradoTasy;
         this.tipoEquipamento = tipoEquipamento;
         this.marca = marca;
@@ -30,6 +31,7 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
         this.qntEstoque = qntEstoque;
         this.qntFuncionando = qntFuncionando;
         this.qntInoperante = qntInoperante;
+        this.URLImagem = URLImagem;
     }
 
     public String getNomeCadastradoTasy() {
@@ -99,4 +101,13 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
     public void setModelo(String modelo) {
         this.modelo = modelo;
     }
+    public String getURLImagem() {
+        return URLImagem;
+    }
+
+    public void setURLImagem(String URLImagem) {
+        this.URLImagem = URLImagem;
+    }
+
 }
+

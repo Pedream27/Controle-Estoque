@@ -29,6 +29,7 @@ const initialNewEquipamentoState = {
     qntEstoque: 0,
     qntFuncionando: 0,
     qntInoperante: 0,
+    URLImagem: '',
 };
 
 function EquipamentoAddModal({ open, onClose, onSave }) {
@@ -153,6 +154,18 @@ function EquipamentoAddModal({ open, onClose, onSave }) {
                             fullWidth
                             variant="outlined"
                             value={newEquipamento.qntInoperante}
+                            onChange={handleChange}
+                        />
+                    </Grid>
+                    <Grid item xs={12} sm={6}>
+                        <TextField
+                            margin="dense"
+                            name="URLImagem"
+                            label="URL da Imagem"
+                            type="url"
+                            fullWidth
+                            variant="outlined"
+                            value={newEquipamento.URLImagem || ''}
                             onChange={handleChange}
                         />
                     </Grid>

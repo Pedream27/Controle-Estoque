@@ -22,12 +22,11 @@ import static br.com.pholiveira.Controle.de.Estoque.hateos.EquipamentosHateos.ad
 public class EquipamentosController {
 
     private final EquipamentosServices equipamentosService;
-    private final ProcessamentoExcel _processamentoExcel;
     private static final Logger log = LoggerFactory.getLogger(PlanilhaController.class);
 
-    public EquipamentosController(EquipamentosServices equipamentosService, ProcessamentoExcel processamentoExcel) {
+    public EquipamentosController(EquipamentosServices equipamentosService) {
         this.equipamentosService = equipamentosService;
-        _processamentoExcel = processamentoExcel;
+       
     }
 
     // Endpoint para criar um novo equipamento
@@ -99,6 +98,11 @@ public class EquipamentosController {
         List<Equipamentos> equipamentos = equipamentosService.buscarPorNome(nome);
         return ResponseEntity.ok(equipamentos);
     }
+
+
+
+    
+
 }
 
 

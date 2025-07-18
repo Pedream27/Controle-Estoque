@@ -1,4 +1,4 @@
-package br.com.pholiveira.Controle.de.Estoque.model.DTOs;
+package br.com.pholiveira.Controle.de.Estoque.model;
 
 import java.util.List;
 

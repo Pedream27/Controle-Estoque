@@ -11,10 +11,10 @@ import {
     FormControl,
     InputLabel,
     Select,
-    MenuItem
+    MenuItem,
+    Box
 } from '@mui/material';
 
-// Enum de localizações
 const LOCALIZACOES = {
     ARMARIO_SUPORTE: 'ARMARIO_SUPORTE',
     DATA_CENTER: 'DATA_CENTER'
@@ -32,6 +32,7 @@ function EquipamentoEditModal({ open, onClose, equipamento, onSave }) {
         qntFuncionando: 0,
         qntInoperante: 0,
         qntEstoque: 0,
+        URLImagem: ''
     });
 
     useEffect(() => {
@@ -41,7 +42,8 @@ function EquipamentoEditModal({ open, onClose, equipamento, onSave }) {
                 qntFuncionando: equipamento.qntFuncionando || 0,
                 qntInoperante: equipamento.qntInoperante || 0,
                 qntEstoque: (equipamento.qntFuncionando || 0) + (equipamento.qntInoperante || 0),
-                localizacao: equipamento.localizacao || LOCALIZACOES.ARMARIO_SUPORTE
+                localizacao: equipamento.localizacao || LOCALIZACOES.ARMARIO_SUPORTE,
+                URLImagem: equipamento.URLImagem || ''
             });
         }
     }, [equipamento]);
@@ -177,6 +179,28 @@ function EquipamentoEditModal({ open, onClose, equipamento, onSave }) {
                             value={editedEquipamento.qntInoperante || ''}
                             onChange={handleChange}
                         />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                        <TextField
+                            margin="dense"
+                            name="URLImagem"
+                            label="URL da Imagem"
+                            type="url"
+                            fullWidth
+                            variant="outlined"
+                            value={editedEquipamento.URLImagem || ''}
+                            onChange={handleChange}
+                        />
+                        {editedEquipamento.URLImagem && (
+                            <Box mt={2} textAlign="center">
+                                <img
+                                    src={editedEquipamento.URLImagem}
+                                    alt="Imagem do Equipamento"
+                                    style={{ maxWidth: '200px', maxHeight: '200px', borderRadius: '8px' }}
+                                />
+                            </Box>
+                        )}
                     </Grid>
                 </Grid>
             </DialogContent>

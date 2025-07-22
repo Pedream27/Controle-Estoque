@@ -4,6 +4,8 @@ import br.com.pholiveira.Controle.de.Estoque.model.enuns.Localizacao;
 import jakarta.persistence.*;
 import org.springframework.hateoas.RepresentationModel;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 @Entity
 @Table(name = "tb_Equipamentos")
 public class Equipamentos extends RepresentationModel<Equipamentos> {
@@ -18,7 +20,8 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
     private int qntEstoque;
     private int qntFuncionando;
     private int qntInoperante;
-    private String URLImagem;
+    @JsonProperty("URLImagem")
+    private String urlImagem;
 
     public Equipamentos() {
     }
@@ -31,7 +34,7 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
         this.qntEstoque = qntEstoque;
         this.qntFuncionando = qntFuncionando;
         this.qntInoperante = qntInoperante;
-        this.URLImagem = URLImagem;
+        this.urlImagem = URLImagem;
     }
 
     public String getNomeCadastradoTasy() {
@@ -102,11 +105,11 @@ public class Equipamentos extends RepresentationModel<Equipamentos> {
         this.modelo = modelo;
     }
     public String getURLImagem() {
-        return URLImagem;
+        return urlImagem;
     }
 
     public void setURLImagem(String URLImagem) {
-        this.URLImagem = URLImagem;
+        this.urlImagem = URLImagem;
     }
 
 }

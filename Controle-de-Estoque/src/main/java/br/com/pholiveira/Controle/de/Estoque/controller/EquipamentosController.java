@@ -13,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 import static br.com.pholiveira.Controle.de.Estoque.hateos.EquipamentosHateos.addHateos;
 import static br.com.pholiveira.Controle.de.Estoque.hateos.EquipamentosHateos.addHateosReturn;
@@ -32,9 +33,8 @@ public class EquipamentosController {
     // Endpoint para criar um novo equipamento
     @PostMapping
     public ResponseEntity<Equipamentos> criarEquipamento(@RequestBody Equipamentos equipamento) {
-        log.info("Criando novo equipamento: {}", equipamento);
+        log.info("Criando novo equipamento: {}" + equipamento.getNomeCadastradoTasy() + " " +equipamento.getTipoEquipamento() +" " +equipamento.getMarca()+ " " + equipamento.getModelo()+"" +equipamento.getLocalizacao()+ "" +equipamento.getQntEstoque() + " "+ equipamento.getQntFuncionando()+" "+ equipamento.getQntInoperante() +" " +equipamento.getURLImagem());
         Equipamentos novoEquipamento = equipamentosService.criarEquipamento(equipamento);
-        addHateos(novoEquipamento);
         return new ResponseEntity<>(novoEquipamento, HttpStatus.CREATED);
     }
 
@@ -99,10 +99,17 @@ public class EquipamentosController {
         return ResponseEntity.ok(equipamentos);
     }
 
-
-
-    
-
+    @PutMapping("/{id}/imagem")
+    public ResponseEntity<Equipamentos> atualizarImagem(
+        @PathVariable Long id,
+        @RequestParam("url") String urlImagem
+    ) {
+        try {
+            Equipamentos eq = equipamentosService.atualizarUrlImagem(id, urlImagem);
+            return ResponseEntity.ok(addHateosReturn(eq));
+        } catch (NoSuchElementException e) {
+            return ResponseEntity.notFound().build();
+        }
+    }
 }
-
 

@@ -8,10 +8,13 @@ export async function getEquipamentos(page = 0, size = 10) {
 }
 
 export async function addEquipamento(data) {
+
+    alert("Adicionando equipamento: " + JSON.stringify(data));
     const res = await fetch(API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data),
+        
     });
     if (!res.ok) throw new Error('Erro ao adicionar equipamento');
     return await res.json();
@@ -69,6 +72,8 @@ export async function enviarNotificacaoEmail(dados) {
     if (!res.ok) throw new Error('Erro ao enviar e-mail');
     return await res.json();
 }
+
+
 
 
 

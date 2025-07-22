@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -67,6 +68,12 @@ public class EquipamentosServices {
     public List<Equipamentos> buscarPorNome(String nome) {
         return _repository.findByNomeCadastradoTasyContainingIgnoreCase(nome);
     }
+
+    public Equipamentos atualizarUrlImagem(Long id, String url) {
+    Equipamentos eq = _repository.findById(id).orElseThrow(NoSuchElementException::new);
+    eq.setURLImagem(url);
+    return _repository.save(eq);
+}
 
 
 

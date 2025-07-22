@@ -20,7 +20,9 @@ import {
     updateEquipamento,
     deleteEquipamento,
     addEquipamento,
-    downloadEquipamentos, buscarEquipamentosPorNome, enviarNotificacaoEmail
+    downloadEquipamentos,
+    buscarEquipamentosPorNome,
+    enviarNotificacaoEmail
 } from '../api/equipamentos.js';
 
 export default function EquipamentosTable() {
@@ -35,7 +37,6 @@ export default function EquipamentosTable() {
     const [size] = useState(10);
     const [totalPages, setTotalPages] = useState(0);
     const [searchTerm, setSearchTerm] = useState('');
-
 
     const showSnack = (message, severity = 'success') =>
         setSnack({ open: true, message, severity });
@@ -58,7 +59,7 @@ export default function EquipamentosTable() {
             } finally {
                 setLoading(false);
             }
-        }, 500); // 500ms debounce
+        }, 500);
 
         return () => clearTimeout(delayDebounce);
     }, [searchTerm, page, size]);
@@ -75,6 +76,7 @@ export default function EquipamentosTable() {
     };
 
     const handleEdit = (equip) => setSelected(equip);
+
     const handleSaveEdit = async (edited) => {
         if (edited.qntFuncionando === 0) {
             const confirm = window.confirm(
@@ -83,7 +85,6 @@ export default function EquipamentosTable() {
 
             if (confirm) {
                 try {
-                    // Supondo que você tenha uma função para enviar email
                     await enviarNotificacaoEmail({
                         assunto: 'Sem Estoque ',
                         mensagem: `O equipamento "${edited.nomeCadastradoTasy} "(${edited.tipoEquipamento}) está com estoque zerado.`
@@ -144,7 +145,6 @@ export default function EquipamentosTable() {
         }
     };
 
-
     if (loading) return (
         <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
             <CircularProgress /><Typography sx={{ ml: 2 }}>Carregando...</Typography>
@@ -152,17 +152,9 @@ export default function EquipamentosTable() {
     );
 
     return (
-
         <Box sx={{ p: 3 }}>
             {error && <Alert severity="error">{error}</Alert>}
-            <Box sx={{  display: 'flex',
-                justifyContent: 'space-between',
-                mb: 3,
-                position: 'sticky',
-                top: 0,
-                backgroundColor: '#fff',
-                zIndex: 1,
-                paddingBottom: 1 }}>
+            <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 1, paddingBottom: 1 }}>
                 <Typography variant="h4">Inventário de Equipamentos</Typography>
                 <Box sx={{ display: 'flex', gap: 2 }}>
                     <Button variant="contained" color="primary" onClick={() => navigate('/demandas')}>
@@ -186,19 +178,16 @@ export default function EquipamentosTable() {
                 </Box>
             </Box>
 
-
-
             {equipamentos.length === 0 ? (
-                <Box sx={{  maxHeight: '60vh', overflowY: 'auto' }}>
+                <Box sx={{ maxHeight: '60vh', overflowY: 'auto' }}>
                     <Typography color="textSecondary">Nenhum equipamento cadastrado.</Typography>
                 </Box>
             ) : (
-                <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
                 <TableContainer component={Paper}>
                     <Table>
                         <TableHead>
                             <TableRow>
-                                {['ID', 'Nome Tasy', 'Tipo', 'Marca', 'Modelo', 'Localização', 'Estoque', 'Situação', 'Ações'].map(text => (
+                                {['Imagem', 'ID', 'Nome Tasy', 'Tipo', 'Marca', 'Modelo', 'Localização', 'Estoque', 'Situação', 'Ações'].map(text => (
                                     <TableCell key={text} align={['Estoque', 'Situação', 'Ações'].includes(text) ? 'center' : 'left'}>
                                         {text}
                                     </TableCell>
@@ -208,6 +197,17 @@ export default function EquipamentosTable() {
                         <TableBody>
                             {equipamentos.map((eq) => (
                                 <TableRow key={eq.id}>
+                                    <TableCell>
+                                        {eq.URLImagem ? (
+                                            <img
+                                                src={eq.URLImagem}
+                                                alt={eq.nomeCadastradoTasy}
+                                                style={{ width: 60, height: 60, objectFit: 'cover', borderRadius: 4 }}
+                                            />
+                                        ) : (
+                                            <Typography variant="body2" color="textSecondary">Sem imagem</Typography>
+                                        )}
+                                    </TableCell>
                                     <TableCell>{eq.id}</TableCell>
                                     <TableCell>{eq.nomeCadastradoTasy}</TableCell>
                                     <TableCell>{eq.tipoEquipamento}</TableCell>
@@ -237,9 +237,8 @@ export default function EquipamentosTable() {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                </Box>
-
             )}
+
             {equipamentos.length > 0 && (
                 <Box sx={{ display: 'flex', justifyContent: 'center', mt: 2 }}>
                     <Pagination

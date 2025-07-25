@@ -76,7 +76,7 @@ export default function AutorizacaoPage() {
                     required
                     multiline
                     rows={3}
-                    value={produto}
+                    value={qntDesejada}
                     onChange={(e) => setQntDesejada(e.target.value)}
                 />
                 <TextField
@@ -86,7 +86,7 @@ export default function AutorizacaoPage() {
                     required
                     multiline
                     rows={3}
-                    value={produto}
+                    value={valorEstimado}
                     onChange={(e) => setValorEstimado(e.target.value)}
                 />
                 <TextField
@@ -96,7 +96,7 @@ export default function AutorizacaoPage() {
                     required
                     multiline
                     rows={3}
-                    value={produto}
+                    value={motivo}
                     onChange={(e) => setMotivo(e.target.value)}
                 />
                 <Box sx={{ mt: 2, display: 'flex', gap: 2 }}>

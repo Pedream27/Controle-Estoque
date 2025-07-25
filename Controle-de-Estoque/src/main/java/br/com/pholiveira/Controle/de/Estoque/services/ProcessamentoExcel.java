@@ -1,7 +1,9 @@
 package br.com.pholiveira.Controle.de.Estoque.services;
 
+import br.com.pholiveira.Controle.de.Estoque.model.Demandas;
 import br.com.pholiveira.Controle.de.Estoque.model.Equipamentos;
 import br.com.pholiveira.Controle.de.Estoque.model.enuns.Localizacao;
+import br.com.pholiveira.Controle.de.Estoque.repository.DemandasRepository;
 import br.com.pholiveira.Controle.de.Estoque.repository.EquipamentosRepository;
 import com.opencsv.CSVReader;
 import com.opencsv.exceptions.CsvValidationException;
@@ -27,6 +29,8 @@ public class ProcessamentoExcel {
 
     @Autowired // Injeta uma instância de ClienteRepository
     private EquipamentosRepository repository;
+    @Autowired
+    private DemandasRepository demandasRepository;
 
     private static Logger logger = LoggerFactory.getLogger(ProcessamentoExcel.class);
 
@@ -249,5 +253,55 @@ public class ProcessamentoExcel {
             .headers(headers)
             .body(new InputStreamResource(new ByteArrayInputStream(out.toByteArray())));
 }
+
+    public ResponseEntity<InputStreamResource> exportToCSVDemandas() throws IOException {
+    logger.info("Exportando dados para CSV");
+    List<Demandas> demandas = demandasRepository.findAll();
+
+    ByteArrayOutputStream out = new ByteArrayOutputStream();
+    try (CSVWriter writer = new CSVWriter(new OutputStreamWriter(out, StandardCharsets.UTF_8))) {
+        // Cabeçalho atualizado
+        writer.writeNext(new String[]{
+                "ID", "Prioridade", "Infrastrutura", "ID Help", "Status", "Local", "Descrição", "Responsável",
+                "Técnico Unipel", "Data Infra", "Data Terceiro", "Agendamento Terceiro",
+                "Técnico Terceiro", "Resposta Help", "Observações"
+        });
+
+        for ( Demandas demanda : demandas) {
+            writer.writeNext(new String[]{
+                    String.valueOf(demanda.getId()),
+                    demanda.getPrioridade() != null ? demanda.getPrioridade().name() : "N/A",
+                    String.valueOf(demanda.isInfra()),
+                    demanda.getIdHelp() != null ? demanda.getIdHelp() : "",
+                    demanda.getStatus() != null ? demanda.getStatus().name() : "N/A",
+                    demanda.getLocal() != null ? demanda.getLocal() : "",
+                    demanda.getDescricao() != null ? demanda.getDescricao() : "",
+                    demanda.getResponsavel() != null ? demanda.getResponsavel() : "",
+                    demanda.getTecnicoUnipel() != null ? demanda.getTecnicoUnipel() : "",
+                    demanda.getDataInfra() != null ? demanda.getDataInfra().toString() : "",
+                    demanda.getDataTerceiro() != null ? demanda.getDataTerceiro().toString() : "",
+                    demanda.getAgendamentoTerceiro() != null ? demanda.getAgendamentoTerceiro().toString() : "",
+                    demanda.getTecnicoTerceiro() != null ? demanda.getTecnicoTerceiro() : "",
+                    demanda.getRespostaHelp() != null ? demanda.getRespostaHelp() : "",
+                    demanda.getObservacoes() != null ? demanda.getObservacoes() : ""
+                 
+            });
+        }
+    }
+
+    String fileName = "Demandas" + LocalDate.now() + ".csv";
+
+    HttpHeaders headers = new HttpHeaders();
+    headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + fileName + "\"");
+    headers.setContentType(MediaType.parseMediaType("text/csv"));
+    headers.add("Access-Control-Expose-Headers", "Content-Disposition");
+
+    return ResponseEntity.ok()
+            .headers(headers)
+            .body(new InputStreamResource(new ByteArrayInputStream(out.toByteArray())));
+}
+
+
+
 
 }

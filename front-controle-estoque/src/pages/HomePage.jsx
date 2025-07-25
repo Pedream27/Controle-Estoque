@@ -59,7 +59,7 @@ export default function HomePage() {
                     <Button
                         variant="outlined"
                         color="secondary"
-                        onClick={() => navigate('/demandas')}
+                        onClick={() => navigate('/tabela/demandas')}
                         size="large"
                     >
                         Ver Tabela de Demandas

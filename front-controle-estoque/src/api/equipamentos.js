@@ -20,6 +20,22 @@ export async function addEquipamento(data) {
     return await res.json();
 }
 
+export async function getDemandas() {
+    const res = await fetch(`${API_URL}/demandas`);
+    if (!res.ok) throw new Error('Erro ao buscar demandas');
+    return await res.json(); // Vai conter: content, totalPages, etc.
+}
+
+export async function addDemanda(data) {
+    const res = await fetch(`${API_URL}/demandas`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data),
+    });
+    if (!res.ok) throw new Error('Erro ao adicionar demanda');
+    return await res.json();    
+}
+
 export async function updateEquipamento(id, data) {
     const res = await fetch(`${API_URL}/${id}`, {
         method: 'PUT',
@@ -45,6 +61,27 @@ export async function downloadEquipamentos() {
     console.log("📦 Header:", contentDisposition);
 
     let filename = "equipamentos.csv"; // fallback
+
+    if (contentDisposition && contentDisposition.includes("filename=")) {
+        filename = contentDisposition
+            .split("filename=")[1]
+            .replace(/["']/g, "")
+            .trim();
+    }
+
+    return { blob, filename };
+}
+
+export async function downloadDemandas() {
+    const res = await fetch(`${API_URL}/demandas/download`);
+    if (!res.ok) throw new Error('Erro ao baixar o banco de dados');
+
+    const blob = await res.blob();
+
+    const contentDisposition = res.headers.get("Content-Disposition");
+    console.log("📦 Header:", contentDisposition);
+
+    let filename = "Demandas.csv"; // fallback
 
     if (contentDisposition && contentDisposition.includes("filename=")) {
         filename = contentDisposition

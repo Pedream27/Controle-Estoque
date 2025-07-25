@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
 
 @RestController()
 @RequestMapping("api/equipamentos")
@@ -50,4 +53,13 @@ public class PlanilhaController {
         log.info("Iniciando o download dos equipamentos em CSV");
         return _processamentoExcel.exportToCSV();
     }
+
+
+    @GetMapping("/demandas/download")
+    public ResponseEntity<InputStreamResource> downloadCSVDemanda() throws IOException {
+        log.info("Iniciando o download das demandas em CSV");
+        return _processamentoExcel.exportToCSVDemandas();
+    
+    }
+    
 }

@@ -157,7 +157,7 @@ export default function EquipamentosTable() {
             <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 3, position: 'sticky', top: 0, backgroundColor: '#fff', zIndex: 1, paddingBottom: 1 }}>
                 <Typography variant="h4">Inventário de Equipamentos</Typography>
                 <Box sx={{ display: 'flex', gap: 2 }}>
-                    <Button variant="contained" color="primary" onClick={() => navigate('/demandas')}>
+                    <Button variant="contained" color="primary" onClick={() => navigate('/tabela/demandas')}>
                         Demandas
                     </Button>
                     <Button variant="contained" color="primary" onClick={() => navigate('/autorizar')}>
